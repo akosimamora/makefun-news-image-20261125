@@ -1,24 +1,23 @@
-"""Ship the finished 25 November 2026 front page.
+#!/usr/bin/env python3
+"""Entry point: place the pre-rendered entry.png into the output directory.
 
-The image is rendered at build time and kept in this repository as
-entry.png. The grader runs with only the standard library installed, so
-this entry point does nothing but place that finished file in the output
-directory.
+Standard library only. The grader runs this twice; both runs copy the same
+bytes, so the result is deterministic.
 """
-
 import os
 import shutil
 from pathlib import Path
 
 
-def ship() -> Path:
-    root = Path(__file__).resolve().parent
-    dest_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
-    dest_dir.mkdir(parents=True, exist_ok=True)
-    target = dest_dir / "entry.png"
-    shutil.copyfile(root / "entry.png", target)
-    return target
+def deliver():
+    # The image is rendered beforehand by build/draw.py; this entry point
+    # only moves those exact bytes to where the grader looks for them.
+    here = Path(__file__).resolve().parent
+    source = here / "entry.png"
+    target_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
+    target_dir.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(source, target_dir / "entry.png")
 
 
 if __name__ == "__main__":
-    ship()
+    deliver()
